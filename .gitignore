@@ -63,3 +63,6 @@ typings/
 # serverless build dir
 .serverless
 
+# avoids committing sensitive data
+game-details.js
+players.js
