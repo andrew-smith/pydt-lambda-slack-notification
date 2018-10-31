@@ -64,5 +64,5 @@ typings/
 .serverless
 
 # avoids committing sensitive data
-game-details.js
-players.js
+config/game-details.js
+config/players.js

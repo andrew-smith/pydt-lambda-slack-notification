@@ -1,6 +1,6 @@
 
-const PLAYERS = require('./players');
-const GAMES = require('./game-details')
+const PLAYERS = require('./config/players');
+const GAMES = require('./config/game-details')
 
 
 module.exports.run = (event, context, callback) => {
