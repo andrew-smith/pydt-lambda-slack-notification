@@ -1,0 +1,17 @@
+
+service: pydt-slack-notification
+
+provider:
+  name: aws
+  runtime: nodejs6.10
+  region: us-west-2
+  stage: live
+  memorySize: 128
+
+functions:
+  cron:
+    description: Checks every 4 minutes to see if a new turn has been taken, and notifies on slack
+    handler: index.run
+    timeout: 30
+    events:
+      - schedule: rate(4 minutes)
