@@ -1,5 +1,6 @@
 
 // A list of PYDT game ids and slack channels to post to
+// Note: Channel is not required. It can use the default one set up when webhook was created.
 
 // example:
 // module.exports.games = {
@@ -8,8 +9,7 @@
 //      'channel': 'general'
 //  },
 //  '2a740247-d9b9-484c-9225-a75a78ffdc4b': {
-//      'slack_url': '"https://hooks.slack.com/services/TBSABC123/CBA987XZY/vrmlNWSrTbkkttjiJ5O1dep4";',
-//      'channel': 'pydt-notifications'
+//      'slack_url': '"https://hooks.slack.com/services/TBSABC123/CBA987XZY/vrmlNWSrTbkkttjiJ5O1dep4";'
 //  }
 // };
 
