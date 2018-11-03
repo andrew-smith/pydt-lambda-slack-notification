@@ -11,6 +11,7 @@ const PYDT_URL = 'https://api.playyourdamnturn.com/game/';
 const MINOR_NAG = true;
 const MODERATE_NAG = true;
 const MAJOR_NAG = true;
+const GIGANTIC_NAG = true;
 
 const MINOR_NAG_WINDOW_OPEN = 180;
 const MINOR_NAG_WINDOW_CLOSE = 176;
@@ -18,15 +19,22 @@ const MINOR_NAG_WINDOW_CLOSE = 176;
 const MODERATE_NAG_WINDOW_OPEN = 300;
 const MODERATE_NAG_WINDOW_CLOSE = 296;
 
-const MAJOR_NAG_WINDOW_OPEN = 1440;
-const MAJOR_NAG_WINDOW_CLOSE = 1436;
+const MAJOR_NAG_WINDOW_OPEN = 780;
+const MAJOR_NAG_WINDOW_CLOSE = 776;
 
-const NAG_LEVEL = Object.freeze({"NO_NAG":0, "MINOR_NAG":1, "MODERATE_NAG":2, "MAJOR_NAG":3});
+const GIGANTIC_NAG_WINDOW_OPEN = 1440;
+const GIGANTIC_NAG_WINDOW_CLOSE = 1436;
+
+const NAG_LEVEL = Object.freeze({"NO_NAG":0, "MINOR_NAG":1, "MODERATE_NAG":2, "MAJOR_NAG":3, "GIGANTIC_NAG":4});
+
+const SLEEP_START = moment().hour(1).minute(0).second(0).millisecond(0);
+const SLEEP_END = moment().hour(7).minute(0).second(0).millisecond(0);
 
 // helper switches to test
 const SLACK_DEBUG = false;
 const FORCE_SLACK_PUSH = false;
 
+var NAG_SLEEP = false;
 var playerDetails;
 var nextPlayerId;
 var nextPlayerName;
@@ -62,6 +70,9 @@ const checkGame = (gameId) => {
 
 	console.log("gameId", gameId);
 
+  NAG_SLEEP = isSleeping();
+  console.log("Is Sleeping: ", NAG_SLEEP);
+
 	let fiveMinutesAgo = moment().subtract(5, 'minutes');
   let minorNagWindowOpen = moment().subtract(MINOR_NAG_WINDOW_OPEN, 'minutes');
   let minorNagWindowClose = moment().subtract(MINOR_NAG_WINDOW_CLOSE, 'minutes');
@@ -69,6 +80,8 @@ const checkGame = (gameId) => {
   let moderateNagWindowClose = moment().subtract(MODERATE_NAG_WINDOW_CLOSE, 'minutes');
   let majorNagWindowOpen = moment().subtract(MAJOR_NAG_WINDOW_OPEN, 'minutes');
   let majorNagWindowClose = moment().subtract(MAJOR_NAG_WINDOW_CLOSE, 'minutes');
+  let giganticNagWindowOpen = moment().subtract(GIGANTIC_NAG_WINDOW_OPEN, 'minutes');
+  let giganticNagWindowClose = moment().subtract(GIGANTIC_NAG_WINDOW_CLOSE, 'minutes');
 
 	return new Promise((resolve, reject) => {
 
@@ -123,7 +136,7 @@ const checkGame = (gameId) => {
               console.log(JSON.stringify(options, null, 4));
               resolve(nextPlayerName);
           }
-      } else if((MINOR_NAG && (minorNagWindowOpen.isBefore(lastTurnTime) && minorNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
+      } else if((MINOR_NAG && !NAG_SLEEP && (minorNagWindowOpen.isBefore(lastTurnTime) && minorNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
           console.log("Minor Nagging!");
           text = craftMessage(NAG_LEVEL.MINOR_NAG, minorNagWindowOpen);
           let options = { method: 'POST',
@@ -148,7 +161,7 @@ const checkGame = (gameId) => {
               console.log(JSON.stringify(options, null, 4));
               resolve(nextPlayerName);
           }
-      } else if((MODERATE_NAG && (moderateNagWindowOpen.isBefore(lastTurnTime) && moderateNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
+      } else if((MODERATE_NAG && !NAG_SLEEP && (moderateNagWindowOpen.isBefore(lastTurnTime) && moderateNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
           console.log("Moderate Nagging!");
           text = craftMessage(NAG_LEVEL.MODERATE_NAG, moderateNagWindowOpen);
           let options = { method: 'POST',
@@ -173,9 +186,34 @@ const checkGame = (gameId) => {
               console.log(JSON.stringify(options, null, 4));
               resolve(nextPlayerName);
           }
-      } else if((MAJOR_NAG && (majorNagWindowOpen.isBefore(lastTurnTime) && majorNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
+      } else if((MAJOR_NAG && !NAG_SLEEP && (majorNagWindowOpen.isBefore(lastTurnTime) && majorNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
           console.log("Major Nagging!");
           text = craftMessage(NAG_LEVEL.MAJOR_NAG, majorNagWindowOpen);
+          let options = { method: 'POST',
+              url: game.slack_url,
+              body: { text: text },
+              json: true
+          };
+
+          if(game.channel) {
+            options.body.channel = game.channel;
+          }
+
+          if(!SLACK_DEBUG || FORCE_SLACK_PUSH) {
+              request(options, function (err2, res2, body2) {
+                  if (err2) {
+                      return reject(err2);
+                  }
+                  resolve(nextPlayerName);
+              });
+          }
+          else {
+              console.log(JSON.stringify(options, null, 4));
+              resolve(nextPlayerName);
+          }
+      } else if ((GIGANTIC_NAG && (giganticNagWindowOpen.isBefore(lastTurnTime) && giganticNagWindowClose.isAfter(lastTurnTime))) || SLACK_DEBUG) {
+          console.log("Gigantic Nagging!");
+          text = craftMessage(NAG_LEVEL.GIGANTIC_NAG, giganticNagWindowOpen);
           let options = { method: 'POST',
               url: game.slack_url,
               body: { text: text },
@@ -241,27 +279,41 @@ function craftMessage(nagLevel, sinceTurn) {
           text = "It's your turn <@" + nextPlayerName + ">!";
           break;
         case 1:
-          text = "Hello <@" + nextPlayerName + ">, what's happening? \n Um, I'm gonna need you to go ahead and do your turn. \n ...Soooo if you could do that for me, that'd be great..mkay?";
+          text = "Hello <@" + nextPlayerName + ">, what's happening?\nUm, I'm gonna need you to go ahead and do your turn.\n...Soooo if you could do that for me, that'd be great..mkay?";
           break;
         case 2:
           if(QUICKEST){
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn! \n You have only had " + slowTurns + " slow turns, which ranks you as the best! \n Keep your lead by doing your turn!"
+            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best!\nKeep your lead by doing your turn!"
           } else if(SLOWEST){
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn! \n You have had " + slowTurns + " slow turns, which ranks you as the worst! \n Pick up the pace to increase your rank!"
+            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you as the worst!\nPick up the pace to increase your rank!"
           } else {
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn! \n You have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ". Do your turn quickly before your rank drops!"
+            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nDo your turn quickly before your rank drops!"
           }
           break;
         case 3:
           if(QUICKEST){
-            text = "HEY <@" + nextPlayerName + ">! IT HAS BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN! \n You have only had " + slowTurns + " slow turns, which ranks you as the best, \n BUT THIS IS TERRIBLE!"
+            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nAre you okay chief? Just checking in.\nYou've only had " + slowTurns + " slow turns, which ranks you as the best!\nSo yeah...you wanna maybe logon and do your turn to keep your reputation intact?"
           } else if(SLOWEST){
-            text = "HEY <@" + nextPlayerName + ">! IT HAS BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN! \n You have had " + slowTurns + " slow turns, which ranks you as the worst! \n YOU ARE A DISGRACE!"
+            text = "(_sigh_) Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nWhat a surprise right. I just...you know what...nevermind.\nYou've had " + slowTurns + " slow turns, which ranks you as the worst!\nDo your turns faster man! COME ON!"
           } else {
-            text = "HEY <@" + nextPlayerName + ">! IT HAS BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN! \n You have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ". AT THIS RATE YOU ARE GOING TO BE WORST!"
+            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nIf you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..you've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n...Sooo how's about you get your shit together and do your turn aye?"
+          }
+          break;
+        case 4:
+          if(QUICKEST){
+            text = "Oi <@" + nextPlayerName + ">! I can't believe I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best,\nBUT COME ON THIS IS TERRIBLE!!"
+          } else if(SLOWEST){
+            text = "Oi <@" + nextPlayerName + ">! Frankly, I'm not surprised I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR BLOODY TURN!\nYOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\nYOU ARE AN ABSOLUTE DISGRACE!!"
+          } else {
+            text = "Oi <@" + nextPlayerName + ">! Come on man...IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nAT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?"
           }
           break;
       }
 
       return text;
+}
+
+function isSleeping() {
+   currentTime = moment();
+   return (currentTime > SLEEP_START && currentTime < SLEEP_END);
 }
