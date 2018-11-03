@@ -13,13 +13,13 @@ const MODERATE_NAG = true;
 const MAJOR_NAG = true;
 
 const MINOR_NAG_WINDOW_OPEN = 180;
-const MINOR_NAG_WINDOW_CLOSE = 175;
+const MINOR_NAG_WINDOW_CLOSE = 176;
 
 const MODERATE_NAG_WINDOW_OPEN = 300;
-const MODERATE_NAG_WINDOW_CLOSE = 295;
+const MODERATE_NAG_WINDOW_CLOSE = 296;
 
 const MAJOR_NAG_WINDOW_OPEN = 1440;
-const MAJOR_NAG_WINDOW_CLOSE = 1435;
+const MAJOR_NAG_WINDOW_CLOSE = 1436;
 
 const NAG_LEVEL = Object.freeze({"NO_NAG":0, "MINOR_NAG":1, "MODERATE_NAG":2, "MAJOR_NAG":3});
 
@@ -241,7 +241,7 @@ function craftMessage(nagLevel, sinceTurn) {
           text = "It's your turn <@" + nextPlayerName + ">!";
           break;
         case 1:
-          text = "Hello <@" + nextPlayerName + ">, what's happening? \n Um, I'm gonna need you go ahead and do your turn. \n ...Soooo if you could do that soon, that'd be great..mkay?";
+          text = "Hello <@" + nextPlayerName + ">, what's happening? \n Um, I'm gonna need you to go ahead and do your turn. \n ...Soooo if you could do that for me, that'd be great..mkay?";
           break;
         case 2:
           if(QUICKEST){
