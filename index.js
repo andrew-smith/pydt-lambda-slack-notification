@@ -85,7 +85,7 @@ const checkGame = (gameId) => {
 
 	return new Promise((resolve, reject) => {
 
-		game = GAMES[gameId];
+		let game = GAMES[gameId];
 
 		request(PYDT_URL + gameId, (err, res, body) => {
 
