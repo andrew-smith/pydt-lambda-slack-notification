@@ -1,9 +1,11 @@
 
 const PLAYERS = require('./config/players').players;
 const GAMES = require('./config/game-details').games;
+const TIMEZONE = process.env.timezone;
 
 const request = require('request');
 const moment = require('moment');
+const momentTZ = require('moment-timezone');
 
 const PYDT_URL = 'https://api.playyourdamnturn.com/game/';
 
@@ -27,8 +29,8 @@ const GIGANTIC_NAG_WINDOW_CLOSE = 1436;
 
 const NAG_LEVEL = Object.freeze({"NO_NAG":0, "MINOR_NAG":1, "MODERATE_NAG":2, "MAJOR_NAG":3, "GIGANTIC_NAG":4});
 
-const SLEEP_START = moment().hour(1).minute(0).second(0).millisecond(0);
-const SLEEP_END = moment().hour(7).minute(0).second(0).millisecond(0);
+const SLEEP_START = moment().tz(TIMEZONE).hour(1).minute(0).second(0).millisecond(0);
+const SLEEP_END = moment().tz(TIMEZONE).hour(7).minute(0).second(0).millisecond(0);
 
 // helper switches to test
 const SLACK_DEBUG = false;
@@ -70,18 +72,15 @@ const checkGame = (gameId) => {
 
 	console.log("gameId", gameId);
 
-  NAG_SLEEP = isSleeping();
-  console.log("Is Sleeping: ", NAG_SLEEP);
-
-	let fiveMinutesAgo = moment().subtract(5, 'minutes');
-  let minorNagWindowOpen = moment().subtract(MINOR_NAG_WINDOW_OPEN, 'minutes');
-  let minorNagWindowClose = moment().subtract(MINOR_NAG_WINDOW_CLOSE, 'minutes');
-  let moderateNagWindowOpen = moment().subtract(MODERATE_NAG_WINDOW_OPEN, 'minutes');
-  let moderateNagWindowClose = moment().subtract(MODERATE_NAG_WINDOW_CLOSE, 'minutes');
-  let majorNagWindowOpen = moment().subtract(MAJOR_NAG_WINDOW_OPEN, 'minutes');
-  let majorNagWindowClose = moment().subtract(MAJOR_NAG_WINDOW_CLOSE, 'minutes');
-  let giganticNagWindowOpen = moment().subtract(GIGANTIC_NAG_WINDOW_OPEN, 'minutes');
-  let giganticNagWindowClose = moment().subtract(GIGANTIC_NAG_WINDOW_CLOSE, 'minutes');
+	let fiveMinutesAgo = moment().tz(TIMEZONE).subtract(5, 'minutes');
+  let minorNagWindowOpen = moment().tz(TIMEZONE).subtract(MINOR_NAG_WINDOW_OPEN, 'minutes');
+  let minorNagWindowClose = moment().tz(TIMEZONE).subtract(MINOR_NAG_WINDOW_CLOSE, 'minutes');
+  let moderateNagWindowOpen = moment().tz(TIMEZONE).subtract(MODERATE_NAG_WINDOW_OPEN, 'minutes');
+  let moderateNagWindowClose = moment().tz(TIMEZONE).subtract(MODERATE_NAG_WINDOW_CLOSE, 'minutes');
+  let majorNagWindowOpen = moment().tz(TIMEZONE).subtract(MAJOR_NAG_WINDOW_OPEN, 'minutes');
+  let majorNagWindowClose = moment().tz(TIMEZONE).subtract(MAJOR_NAG_WINDOW_CLOSE, 'minutes');
+  let giganticNagWindowOpen = moment().tz(TIMEZONE).subtract(GIGANTIC_NAG_WINDOW_OPEN, 'minutes');
+  let giganticNagWindowClose = moment().tz(TIMEZONE).subtract(GIGANTIC_NAG_WINDOW_CLOSE, 'minutes');
 
 	return new Promise((resolve, reject) => {
 
@@ -103,12 +102,17 @@ const checkGame = (gameId) => {
 
       playerDetails = body.players;
 			nextPlayerId = body.currentPlayerSteamId;
-			lastTurnTime = moment(body.lastTurnEndDate);
+			lastTurnTime = moment(body.lastTurnEndDate).tz(TIMEZONE);
       nextPlayerName = PLAYERS[nextPlayerId];
 
-      console.log("id", nextPlayerId);
-      console.log("name", nextPlayerName);
-      console.log("time", lastTurnTime);
+      console.log("id: ", nextPlayerId);
+      console.log("name: ", nextPlayerName);
+      console.log("last turn time: ", lastTurnTime);
+
+      NAG_SLEEP = isSleeping();
+      console.log("is sleeping: ", NAG_SLEEP);
+
+
 
 			// this lambda function polls every 4 minutes. Check if the last turn happened at least 5 minutes ago
 			if(fiveMinutesAgo.isBefore(lastTurnTime) || SLACK_DEBUG) {
@@ -247,7 +251,7 @@ const checkGame = (gameId) => {
 };
 
 function craftMessage(nagLevel, sinceTurn) {
-      let duration = moment.duration(moment().diff(sinceTurn, 'hours'));;
+      let duration = moment.duration(moment().tz(TIMEZONE).diff(sinceTurn, 'hours'));;
       let QUICKEST = false;
       let SLOWEST = false;
 
@@ -314,6 +318,6 @@ function craftMessage(nagLevel, sinceTurn) {
 }
 
 function isSleeping() {
-   currentTime = moment();
-   return (currentTime > SLEEP_START && currentTime < SLEEP_END);
+   currentTime = moment().tz(TIMEZONE);
+   return (currentTime.isAfter(SLEEP_START) && currentTime.isBefore(SLEEP_END));
 }

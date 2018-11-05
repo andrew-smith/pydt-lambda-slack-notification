@@ -7,6 +7,8 @@ provider:
   region: us-west-2
   stage: live
   memorySize: 128
+  environment:
+    timezone: Pacific/Auckland
 
 functions:
   cron:
