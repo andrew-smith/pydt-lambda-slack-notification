@@ -4,8 +4,7 @@ const GAMES = require('./config/game-details').games;
 const TIMEZONE = process.env.timezone;
 
 const request = require('request');
-const moment = require('moment');
-const momentTZ = require('moment-timezone');
+const moment = require('moment-timezone');
 
 const PYDT_URL = 'https://api.playyourdamnturn.com/game/';
 
@@ -41,7 +40,6 @@ var playerDetails;
 var nextPlayerId;
 var nextPlayerName;
 var lastTurnTime;
-var game;
 var text;
 
 
@@ -108,6 +106,8 @@ const checkGame = (gameId) => {
       console.log("id: ", nextPlayerId);
       console.log("name: ", nextPlayerName);
       console.log("last turn time: ", lastTurnTime);
+      console.log("sleep start: ", SLEEP_START);
+      console.log("sleep end: ", SLEEP_END);
 
       NAG_SLEEP = isSleeping();
       console.log("is sleeping: ", NAG_SLEEP);
@@ -251,7 +251,7 @@ const checkGame = (gameId) => {
 };
 
 function craftMessage(nagLevel, sinceTurn) {
-      let duration = moment.duration(moment().tz(TIMEZONE).diff(sinceTurn, 'hours'));;
+      let duration = moment.duration(moment().tz(TIMEZONE).diff(sinceTurn, 'hours'));
       let QUICKEST = false;
       let SLOWEST = false;
 
@@ -287,29 +287,29 @@ function craftMessage(nagLevel, sinceTurn) {
           break;
         case 2:
           if(QUICKEST){
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best!\nKeep your lead by doing your turn!"
+            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best!\nKeep your lead by doing your turn!";
           } else if(SLOWEST){
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you as the worst!\nPick up the pace to increase your rank!"
+            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you as the worst!\nPick up the pace to increase your rank!";
           } else {
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nDo your turn quickly before your rank drops!"
+            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nDo your turn quickly before your rank drops!";
           }
           break;
         case 3:
           if(QUICKEST){
-            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nAre you okay chief? Just checking in.\nYou've only had " + slowTurns + " slow turns, which ranks you as the best!\nSo yeah...you wanna maybe logon and do your turn to keep your reputation intact?"
+            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nAre you okay chief? Just checking in.\nYou've only had " + slowTurns + " slow turns, which ranks you as the best!\nSo yeah...you wanna maybe logon and do your turn to keep your reputation intact?";
           } else if(SLOWEST){
-            text = "(_sigh_) Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nWhat a surprise right. I just...you know what...nevermind.\nYou've had " + slowTurns + " slow turns, which ranks you as the worst!\nDo your turns faster man! COME ON!"
+            text = "(_sigh_) Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nWhat a surprise right. I just...you know what...nevermind.\nYou've had " + slowTurns + " slow turns, which ranks you as the worst!\nDo your turns faster man! COME ON!";
           } else {
-            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nIf you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..you've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n...Sooo how's about you get your shit together and do your turn aye?"
+            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nIf you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..you've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n...Sooo how's about you get your shit together and do your turn aye?";
           }
           break;
         case 4:
           if(QUICKEST){
-            text = "Oi <@" + nextPlayerName + ">! I can't believe I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best,\nBUT COME ON THIS IS TERRIBLE!!"
+            text = "Oi <@" + nextPlayerName + ">! I can't believe I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best,\nBUT COME ON THIS IS TERRIBLE!!";
           } else if(SLOWEST){
-            text = "Oi <@" + nextPlayerName + ">! Frankly, I'm not surprised I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR BLOODY TURN!\nYOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\nYOU ARE AN ABSOLUTE DISGRACE!!"
+            text = "Oi <@" + nextPlayerName + ">! Frankly, I'm not surprised I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR BLOODY TURN!\nYOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\nYOU ARE AN ABSOLUTE DISGRACE!!";
           } else {
-            text = "Oi <@" + nextPlayerName + ">! Come on man...IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nAT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?"
+            text = "Oi <@" + nextPlayerName + ">! Come on man...IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nAT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?";
           }
           break;
       }
@@ -318,6 +318,7 @@ function craftMessage(nagLevel, sinceTurn) {
 }
 
 function isSleeping() {
-   currentTime = moment().tz(TIMEZONE);
+   let currentTime = moment().tz(TIMEZONE);
+   console.log("current time: ", currentTime);
    return (currentTime.isAfter(SLEEP_START) && currentTime.isBefore(SLEEP_END));
 }
