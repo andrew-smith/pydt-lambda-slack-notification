@@ -1,0 +1,130 @@
+
+// A mapping of nag level and player details to messages
+// Note: In order for nag messages to make sense, a config/messages.js file must be created.
+//       At the minimum, if LEADER_MESSAGES is set to false, just ensure values are entered in the 'standard' fields
+
+// example:
+/*
+module.exports.messages = {
+    'no_nag': {
+    },
+    'minor_nag': {
+      'general': {
+        'intro': {
+          'standard': "Hello, what's happening?\n",
+          'LEADER_VICTORIA': "Hey Vicky, what's happening?\n",
+          'LEADER_GENGHIS_KHAN': "Hey Genghis, what's happening?\n",
+          'LEADER_BARBAROSSA': "Hey Freddy, what's happening?\n",
+          'LEADER_HOJO': "Hey Hojo-san, what's happening?\n",
+          'LEADER_CHANDRAGUPTA': "Hey Chandy, what's happening?\n"
+        },
+        'message': "Um, I'm gonna need you to go ahead and do your turn.\n...Soooo if you could do that for me, that'd be great..mkay?"
+      }
+    },
+    'moderate_nag': {
+      'quickest': {
+        'intro': {
+          'standard': "Hey!\n",
+          'LEADER_VICTORIA': "Hello Victoria, stop playing with your battleship!\n",
+          'LEADER_GENGHIS_KHAN': "Hello Genghis Khan, get off your horse and back into your ger!\n",
+          'LEADER_BARBAROSSA': "Hello Frederick Barbarossa, put down that beer!\n",
+          'LEADER_HOJO': "Hello Hojo Tokimune, stop fishing!\n",
+          'LEADER_CHANDRAGUPTA': "Hello Chandragupta, quit messing around with your Varu!\n"
+        },
+        'message': "Keep your lead by doing your turn!"
+      },
+      'slowest': {
+        'intro': {
+          'standard': "Hey!\n",
+          'LEADER_VICTORIA': "Hello Victoria, stop playing with your battleship!\n",
+          'LEADER_GENGHIS_KHAN': "Hello Genghis Khan, get off your horse and back into your ger!\n",
+          'LEADER_BARBAROSSA': "Hello Frederick Barbarossa, put down that beer!\n",
+          'LEADER_HOJO': "Hello Hojo Tokimune, stop fishing!\n",
+          'LEADER_CHANDRAGUPTA': "Hello Chandragupta, quit messing around with your Varu!\n"
+        },
+        'message': "Pick up the pace to increase your rank!"
+      },
+      'general': {
+        'intro': {
+          'standard': "Hey!\n",
+          'LEADER_VICTORIA': "Hello Victoria, stop playing with your battleship!\n",
+          'LEADER_GENGHIS_KHAN': "Hello Genghis Khan, get off your horse and back into your ger!\n",
+          'LEADER_BARBAROSSA': "Hello Frederick Barbarossa, put down that beer!\n",
+          'LEADER_HOJO': "Hello Hojo Tokimune, stop fishing!\n",
+          'LEADER_CHANDRAGUPTA': "Hello Chandragupta, quit messing around with your Varu!\n"
+        },
+        'message': "Do your turn quickly before your rank drops!"
+      }
+    },
+    'major_nag': {
+      'quickest': {
+        'intro': {
+          'standard': "Heeey, are you okay chief? Just checking in.\n",
+          'LEADER_VICTORIA': "Heeey Vicky, are you okay chief? Just checking in.\n",
+          'LEADER_GENGHIS_KHAN': "Heeey Genghis, are you okay chief? Just checking in.\n",
+          'LEADER_BARBAROSSA': "Heeey Freddy, are you okay chief? Just checking in.\n",
+          'LEADER_HOJO': "Heeey Hojo-san, are you okay chief? Just checking in.\n",
+          'LEADER_CHANDRAGUPTA': "Heeey Chandy, are you okay chief? Just checking in.\n"
+        },
+        'message': "So yeah...you wanna maybe logon and do your turn to keep your reputation intact?"
+      },
+      'slowest': {
+        'intro': {
+          'standard': "(_sigh_) Heeey...here we are again...what a surprise right. I just...you know what...nevermind.\n",
+          'LEADER_VICTORIA': "(_sigh_) Heeey Vicky...here we are again...what a surprise right. I just...you know what...nevermind.\n",
+          'LEADER_GENGHIS_KHAN': "(_sigh_) Heeey Genghis...here we are again...what a surprise right. I just...you know what...nevermind.\n",
+          'LEADER_BARBAROSSA': "(_sigh_) Heeey Freddy...here we are again...what a surprise right. I just...you know what...nevermind.\n",
+          'LEADER_HOJO': "(_sigh_) Heeey Hojo-san...here we are again...what a surprise right. I just...you know what...nevermind.\n",
+          'LEADER_CHANDRAGUPTA': "(_sigh_) Heeey Chandy...here we are again...what a surprise right. I just...you know what...nevermind.\n"
+        },
+        'message': "Do your turns faster man! COME ON!"
+      },
+      'general': {
+        'intro': {
+          'standard': "Heeey...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
+          'LEADER_VICTORIA': "Heeey Vicky...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
+          'LEADER_GENGHIS_KHAN': "Heeey Genghis...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
+          'LEADER_BARBAROSSA': "Heeey Freddy...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
+          'LEADER_HOJO': "Heeey Hojo-san...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
+          'LEADER_CHANDRAGUPTA': "Heeey Chandy...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n"
+        },
+        'message': "...Sooo how's about you get your shit together and do your turn aye?"
+      }
+    },
+    'gigantic_nag': {
+      'quickest': {
+        'intro': {
+          'standard': "Oi...I can't believe I have to tell you this but\n",
+          'LEADER_VICTORIA': "Oi Victoria...I can't believe I have to tell you this but\n",
+          'LEADER_GENGHIS_KHAN': "Oi Genghis Khan...I can't believe I have to tell you this but\n",
+          'LEADER_BARBAROSSA': "Oi Frederick...I can't believe I have to tell you this but\n",
+          'LEADER_HOJO': "Oi Hojo Tokimune...I can't believe I have to tell you this but\n",
+          'LEADER_CHANDRAGUPTA': "Oi Chandragupta...I can't believe I have to tell you this but\n"
+        },
+        'message': "BUT COME ON THIS IS TERRIBLE!!"
+      },
+      'slowest': {
+        'intro': {
+          'standard': "Oi...Frankly, I'm not surprised I have to tell you this but\n",
+          'LEADER_VICTORIA': "Oi Victoria...Frankly, I'm not surprised I have to tell you this but\n",
+          'LEADER_GENGHIS_KHAN': "Oi Genghis Khan...Frankly, I'm not surprised I have to tell you this but\n",
+          'LEADER_BARBAROSSA': "Oi Frederick...Frankly, I'm not surprised I have to tell you this but\n",
+          'LEADER_HOJO': "Oi Hojo-san Tokimune...Frankly, I'm not surprised I have to tell you this but\n",
+          'LEADER_CHANDRAGUPTA': "Oi Chandragupta...Frankly, I'm not surprised I have to tell you this but\n"
+        },
+        'message': "YOU ARE AN ABSOLUTE DISGRACE!!"
+      },
+      'general': {
+        'intro': {
+          'standard': "Oi...Come on man...\n",
+          'LEADER_VICTORIA': "Oi Victoria...Come on man...\n",
+          'LEADER_GENGHIS_KHAN': "Oi Genghis Khan...Come on man...\n",
+          'LEADER_BARBAROSSA': "Oi Frederick...Come on man...\n",
+          'LEADER_HOJO': "Oi Hojo Tokimune...Come on man...\n",
+          'LEADER_CHANDRAGUPTA': "Oi Chandragupta...Come on man...\n"
+        },
+        'message': "AT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?"
+      }
+    }
+};
+*/

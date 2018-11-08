@@ -1,10 +1,10 @@
 
 const PLAYERS = require('./config/players').players;
 const GAMES = require('./config/game-details').games;
-const TIMEZONE = process.env.timezone;
+const MESSAGES = require('./config/messages').messages;
 
 const request = require('request');
-const moment = require('moment-timezone');
+const moment = require('moment');
 
 const PYDT_URL = 'https://api.playyourdamnturn.com/game/';
 
@@ -28,12 +28,15 @@ const GIGANTIC_NAG_WINDOW_CLOSE = 1436;
 
 const NAG_LEVEL = Object.freeze({"NO_NAG":0, "MINOR_NAG":1, "MODERATE_NAG":2, "MAJOR_NAG":3, "GIGANTIC_NAG":4});
 
-const SLEEP_START = moment().tz(TIMEZONE).hour(1).minute(0).second(0).millisecond(0);
-const SLEEP_END = moment().tz(TIMEZONE).hour(7).minute(0).second(0).millisecond(0);
+const SLEEP_START = moment().hour(12).minute(0).second(0).millisecond(0);
+const SLEEP_END = moment().hour(18).minute(0).second(0).millisecond(0);
 
 // helper switches to test
 const SLACK_DEBUG = false;
 const FORCE_SLACK_PUSH = false;
+
+// use civ leader specific messaging as opposed to standard messages
+const LEADER_MESSAGES = true;
 
 var NAG_SLEEP = false;
 var playerDetails;
@@ -70,15 +73,15 @@ const checkGame = (gameId) => {
 
 	console.log("gameId", gameId);
 
-	let fiveMinutesAgo = moment().tz(TIMEZONE).subtract(5, 'minutes');
-  let minorNagWindowOpen = moment().tz(TIMEZONE).subtract(MINOR_NAG_WINDOW_OPEN, 'minutes');
-  let minorNagWindowClose = moment().tz(TIMEZONE).subtract(MINOR_NAG_WINDOW_CLOSE, 'minutes');
-  let moderateNagWindowOpen = moment().tz(TIMEZONE).subtract(MODERATE_NAG_WINDOW_OPEN, 'minutes');
-  let moderateNagWindowClose = moment().tz(TIMEZONE).subtract(MODERATE_NAG_WINDOW_CLOSE, 'minutes');
-  let majorNagWindowOpen = moment().tz(TIMEZONE).subtract(MAJOR_NAG_WINDOW_OPEN, 'minutes');
-  let majorNagWindowClose = moment().tz(TIMEZONE).subtract(MAJOR_NAG_WINDOW_CLOSE, 'minutes');
-  let giganticNagWindowOpen = moment().tz(TIMEZONE).subtract(GIGANTIC_NAG_WINDOW_OPEN, 'minutes');
-  let giganticNagWindowClose = moment().tz(TIMEZONE).subtract(GIGANTIC_NAG_WINDOW_CLOSE, 'minutes');
+	let fiveMinutesAgo = moment().subtract(5, 'minutes');
+  let minorNagWindowOpen = moment().subtract(MINOR_NAG_WINDOW_OPEN, 'minutes');
+  let minorNagWindowClose = moment().subtract(MINOR_NAG_WINDOW_CLOSE, 'minutes');
+  let moderateNagWindowOpen = moment().subtract(MODERATE_NAG_WINDOW_OPEN, 'minutes');
+  let moderateNagWindowClose = moment().subtract(MODERATE_NAG_WINDOW_CLOSE, 'minutes');
+  let majorNagWindowOpen = moment().subtract(MAJOR_NAG_WINDOW_OPEN, 'minutes');
+  let majorNagWindowClose = moment().subtract(MAJOR_NAG_WINDOW_CLOSE, 'minutes');
+  let giganticNagWindowOpen = moment().subtract(GIGANTIC_NAG_WINDOW_OPEN, 'minutes');
+  let giganticNagWindowClose = moment().subtract(GIGANTIC_NAG_WINDOW_CLOSE, 'minutes');
 
 	return new Promise((resolve, reject) => {
 
@@ -100,7 +103,7 @@ const checkGame = (gameId) => {
 
       playerDetails = body.players;
 			nextPlayerId = body.currentPlayerSteamId;
-			lastTurnTime = moment(body.lastTurnEndDate).tz(TIMEZONE);
+			lastTurnTime = moment(body.lastTurnEndDate);
       nextPlayerName = PLAYERS[nextPlayerId];
 
       console.log("id: ", nextPlayerId);
@@ -251,13 +254,14 @@ const checkGame = (gameId) => {
 };
 
 function craftMessage(nagLevel, sinceTurn) {
-      let duration = moment.duration(moment().tz(TIMEZONE).diff(sinceTurn, 'hours'));
+      let duration = moment.duration(moment().diff(sinceTurn, 'hours'));
       let QUICKEST = false;
       let SLOWEST = false;
 
       let slowTurnsArray = [];
       let slowTurns = 0;
       let playerCount = 0;
+      let civType = "";
       playerDetails.forEach(function(player) {
         slowTurnsArray.push(player.slowTurns);
         playerCount++;
@@ -267,6 +271,7 @@ function craftMessage(nagLevel, sinceTurn) {
       playerDetails.forEach(function(player) {
         if(player.steamId == nextPlayerId){
           slowTurns = player.slowTurns;
+          civType = player.civType;
         }
       });
 
@@ -283,33 +288,111 @@ function craftMessage(nagLevel, sinceTurn) {
           text = "It's your turn <@" + nextPlayerName + ">!";
           break;
         case 1:
-          text = "Hello <@" + nextPlayerName + ">, what's happening?\nUm, I'm gonna need you to go ahead and do your turn.\n...Soooo if you could do that for me, that'd be great..mkay?";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.minor_nag.general.intro[civType];
+            } else {
+              text += MESSAGES.minor_nag.general.intro.standard;
+            }
+            text += MESSAGES.minor_nag.general.message;
           break;
         case 2:
           if(QUICKEST){
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best!\nKeep your lead by doing your turn!";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.moderate_nag.quickest.intro[civType];
+            } else {
+              text += MESSAGES.moderate_nag.quickest.intro.standard;
+            }
+            text += "It's been " + duration + " hours, and it's still your turn!\n"; +
+                    "You have only had " + slowTurns + " slow turns, which ranks you as the best!\n"; +
+                    MESSAGES.moderate_nag.quickest.message;
           } else if(SLOWEST){
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you as the worst!\nPick up the pace to increase your rank!";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.moderate_nag.slowest.intro[civType];
+            } else {
+              text += MESSAGES.moderate_nag.slowest.intro.standard;
+            }
+            text += "It's been " + duration + " hours, and it's still your turn!\n" +
+                    "You have had " + slowTurns + " slow turns, which ranks you as the worst!\n" +
+                    MESSAGES.moderate_nag.slowest.message;
           } else {
-            text = "Hey <@" + nextPlayerName + ">! It has been " + duration + " hours, and it's still your turn!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nDo your turn quickly before your rank drops!";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.moderate_nag.general.intro[civType];
+            } else {
+              text += MESSAGES.moderate_nag.general.intro.standard;
+            }
+            text += "It's been " + duration + " hours, and it's still your turn!\n" +
+                    "You have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    MESSAGES.moderate_nag.general.message;
           }
           break;
         case 3:
           if(QUICKEST){
-            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nAre you okay chief? Just checking in.\nYou've only had " + slowTurns + " slow turns, which ranks you as the best!\nSo yeah...you wanna maybe logon and do your turn to keep your reputation intact?";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.major_nag.quickest.intro[civType];
+            } else {
+              text += MESSAGES.major_nag.quickest.intro.standard;
+            }
+            text += "It's been " + duration + " hours, and it's still your turn!\n" +
+                    "You've only had " + slowTurns + " slow turns, which ranks you as the best!\n" +
+                    MESSAGES.major_nag.quickest.message;
           } else if(SLOWEST){
-            text = "(_sigh_) Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nWhat a surprise right. I just...you know what...nevermind.\nYou've had " + slowTurns + " slow turns, which ranks you as the worst!\nDo your turns faster man! COME ON!";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.major_nag.slowest.intro[civType];
+            } else {
+              text += MESSAGES.major_nag.slowest.intro.standard;
+            }
+            text += "It's been " + duration + " hours, and it's still your turn!\n" +
+                    "You've had " + slowTurns + " slow turns, which ranks you as the worst!\n" +
+                    MESSAGES.major_nag.slowest.message;
           } else {
-            text = "Heeey <@" + nextPlayerName + ">! It's been " + duration + " hours, and it's still your turn!\nIf you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..you've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n...Sooo how's about you get your shit together and do your turn aye?";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.major_nag.general.intro[civType];
+            } else {
+              text += MESSAGES.major_nag.general.intro.standard;
+            }
+            text += "It's been " + duration + " hours, and it's still your turn!\n" +
+                    "You've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    MESSAGES.major_nag.general.message;
           }
           break;
         case 4:
           if(QUICKEST){
-            text = "Oi <@" + nextPlayerName + ">! I can't believe I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have only had " + slowTurns + " slow turns, which ranks you as the best,\nBUT COME ON THIS IS TERRIBLE!!";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.gigantic_nag.quickest.intro[civType];
+            } else {
+              text += MESSAGES.gigantic_nag.quickest.intro.standard;
+            }
+            text += "IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\n" +
+                    "You've only had " + slowTurns + " slow turns, which ranks you as the best,\n" +
+                    MESSAGES.gigantic_nag.quickest.message;
           } else if(SLOWEST){
-            text = "Oi <@" + nextPlayerName + ">! Frankly, I'm not surprised I have to tell you this but IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR BLOODY TURN!\nYOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\nYOU ARE AN ABSOLUTE DISGRACE!!";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.gigantic_nag.slowest.intro[civType];
+            } else {
+              text += MESSAGES.gigantic_nag.slowest.intro.standard;
+            }
+            text += "IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR BLOODY TURN!\n" +
+                    "YOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\n" +
+                    MESSAGES.gigantic_nag.slowest.message;
           } else {
-            text = "Oi <@" + nextPlayerName + ">! Come on man...IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\nYou have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\nAT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?";
+            text = "<@" + nextPlayerName + ">\n";
+            if (LEADER_MESSAGES){
+              text += MESSAGES.gigantic_nag.general.intro[civType];
+            } else {
+              text += MESSAGES.gigantic_nag.general.intro.standard;
+            }
+            text += "IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\n" +
+                    "You've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    MESSAGES.gigantic_nag.general.message;
           }
           break;
       }
@@ -318,7 +401,7 @@ function craftMessage(nagLevel, sinceTurn) {
 }
 
 function isSleeping() {
-   let currentTime = moment().tz(TIMEZONE);
+   let currentTime = moment();
    console.log("current time: ", currentTime);
    return (currentTime.isAfter(SLEEP_START) && currentTime.isBefore(SLEEP_END));
 }
