@@ -5,6 +5,7 @@ const MESSAGES = require('./config/messages').messages;
 
 const request = require('request');
 const moment = require('moment');
+const luxon = require('luxon');
 
 const PYDT_URL = 'https://api.playyourdamnturn.com/game/';
 
@@ -28,8 +29,8 @@ const GIGANTIC_NAG_WINDOW_CLOSE = 1436;
 
 const NAG_LEVEL = Object.freeze({"NO_NAG":0, "MINOR_NAG":1, "MODERATE_NAG":2, "MAJOR_NAG":3, "GIGANTIC_NAG":4});
 
-const SLEEP_START = moment().hour(12).minute(0).second(0).millisecond(0);
-const SLEEP_END = moment().hour(18).minute(0).second(0).millisecond(0);
+const SLEEP_START = moment().hour(11).minute(0).second(0).millisecond(0);
+const SLEEP_END = moment().hour(17).minute(0).second(0).millisecond(0);
 
 // helper switches to test
 const SLACK_DEBUG = false;
@@ -259,23 +260,35 @@ function craftMessage(nagLevel, sinceTurn) {
       let SLOWEST = false;
 
       let slowTurnsArray = [];
+      let averageTurnTimeArray = [];
+      let civType = "";
+      let turnsPlayed = 0;
+      let timeTaken = 0;
+      let averageTurnTime = 0;
       let slowTurns = 0;
       let playerCount = 0;
-      let civType = "";
+
       playerDetails.forEach(function(player) {
+        averageTurnTime = luxon.Duration.fromMillis(player.timeTaken/player.turnsPlayed);
+        averageTurnTimeArray.push(averageTurnTime.as('milliseconds'));
         slowTurnsArray.push(player.slowTurns);
         playerCount++;
       });
+      averageTurnTimeArray.sort((x, y) => x - y);
       slowTurnsArray.sort((x, y) => x - y);
 
       playerDetails.forEach(function(player) {
         if(player.steamId == nextPlayerId){
+          averageTurnTime = luxon.Duration.fromMillis(player.timeTaken/player.turnsPlayed).shiftTo('hours', 'minutes', 'seconds');
           slowTurns = player.slowTurns;
           civType = player.civType;
         }
       });
 
-      let rank = slowTurnsArray.indexOf(slowTurns) + 1;
+      //Option to rank by slow turns instead of average turn time
+      //let rank = slowTurnsArray.indexOf(slowTurns) + 1;
+
+      let rank = averageTurnTimeArray.indexOf(averageTurnTime.as('milliseconds')) + 1;
 
       if(rank == 1){
         QUICKEST = true;
@@ -304,8 +317,9 @@ function craftMessage(nagLevel, sinceTurn) {
             } else {
               text += MESSAGES.moderate_nag.quickest.intro.standard;
             }
-            text += "It's been " + duration + " hours, and it's still your turn!\n"; +
-                    "You have only had " + slowTurns + " slow turns, which ranks you as the best!\n"; +
+            text += "It's been " + duration + " hours, and it's still your turn!\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you as the best!\n" +
+                    //"You have only had " + slowTurns + " slow turns, which ranks you as the best!\n" +
                     MESSAGES.moderate_nag.quickest.message;
           } else if(SLOWEST){
             text = "<@" + nextPlayerName + ">\n";
@@ -315,7 +329,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.moderate_nag.slowest.intro.standard;
             }
             text += "It's been " + duration + " hours, and it's still your turn!\n" +
-                    "You have had " + slowTurns + " slow turns, which ranks you as the worst!\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you as the worst!\n" +
+                    //"You have had " + slowTurns + " slow turns, which ranks you as the worst!\n" +
                     MESSAGES.moderate_nag.slowest.message;
           } else {
             text = "<@" + nextPlayerName + ">\n";
@@ -325,7 +340,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.moderate_nag.general.intro.standard;
             }
             text += "It's been " + duration + " hours, and it's still your turn!\n" +
-                    "You have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    //"You have had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
                     MESSAGES.moderate_nag.general.message;
           }
           break;
@@ -338,7 +354,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.major_nag.quickest.intro.standard;
             }
             text += "It's been " + duration + " hours, and it's still your turn!\n" +
-                    "You've only had " + slowTurns + " slow turns, which ranks you as the best!\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you as the best!\n" +
+                    //"You've only had " + slowTurns + " slow turns, which ranks you as the best!\n" +
                     MESSAGES.major_nag.quickest.message;
           } else if(SLOWEST){
             text = "<@" + nextPlayerName + ">\n";
@@ -348,7 +365,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.major_nag.slowest.intro.standard;
             }
             text += "It's been " + duration + " hours, and it's still your turn!\n" +
-                    "You've had " + slowTurns + " slow turns, which ranks you as the worst!\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you as the worst!\n" +
+                    //"You've had " + slowTurns + " slow turns, which ranks you as the worst!\n" +
                     MESSAGES.major_nag.slowest.message;
           } else {
             text = "<@" + nextPlayerName + ">\n";
@@ -358,7 +376,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.major_nag.general.intro.standard;
             }
             text += "It's been " + duration + " hours, and it's still your turn!\n" +
-                    "You've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    //"You've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
                     MESSAGES.major_nag.general.message;
           }
           break;
@@ -371,7 +390,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.gigantic_nag.quickest.intro.standard;
             }
             text += "IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\n" +
-                    "You've only had " + slowTurns + " slow turns, which ranks you as the best,\n" +
+                    "Your average turn time is " + averageTurnTime.hours + " hour(s) and " + averageTurnTime.minutes + " minutes, which ranks you as the best,\n" +
+                    //"You've only had " + slowTurns + " slow turns, which ranks you as the best,\n" +
                     MESSAGES.gigantic_nag.quickest.message;
           } else if(SLOWEST){
             text = "<@" + nextPlayerName + ">\n";
@@ -381,7 +401,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.gigantic_nag.slowest.intro.standard;
             }
             text += "IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR BLOODY TURN!\n" +
-                    "YOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\n" +
+                    "YOUR AVERAGE TURN TIME IS " + averageTurnTime.hours + " HOUR(S) AND " + averageTurnTime.minutes + " MINUTES, WHICH RANKS YOU AS THE WORST!\n" +
+                    //"YOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU AS THE WORST!\n" +
                     MESSAGES.gigantic_nag.slowest.message;
           } else {
             text = "<@" + nextPlayerName + ">\n";
@@ -391,7 +412,8 @@ function craftMessage(nagLevel, sinceTurn) {
               text += MESSAGES.gigantic_nag.general.intro.standard;
             }
             text += "IT'S BEEN " + duration + " HOURS NOW, AND IT'S STILL YOUR TURN!\n" +
-                    "You've had " + slowTurns + " slow turns, which ranks you " + rank + " out of " + playerCount + ".\n" +
+                    "YOUR AVERAGE TURN TIME IS " + averageTurnTime.hours + " HOUR(S) AND " + averageTurnTime.minutes + " MINUTES, WHICH RANKS YOU " + rank + " OUT OF " + playerCount + ".\n" +
+                    //"YOU HAVE HAD " + slowTurns + " SLOW TURNS, WHICH RANKS YOU " + rank + " OUT OF " + playerCount + ".\n" +
                     MESSAGES.gigantic_nag.general.message;
           }
           break;

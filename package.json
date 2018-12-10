@@ -9,6 +9,7 @@
   "author": "Andrew Smith",
   "license": "MIT",
   "dependencies": {
+    "luxon": "^1.8.2",
     "moment": "^2.22.2",
     "request": "^2.88.0"
   }
