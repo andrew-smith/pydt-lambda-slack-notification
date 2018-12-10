@@ -13,9 +13,9 @@ module.exports.messages = {
         'intro': {
           'standard': "Hello, what's happening?\n",
           'LEADER_VICTORIA': "Hey Vicky, what's happening?\n",
-          'LEADER_GENGHIS_KHAN': "Hey Genghis, what's happening?\n",
+          'LEADER_GENGHIS_KHAN': "Hey Temujin, what's happening?\n",
           'LEADER_BARBAROSSA': "Hey Freddy, what's happening?\n",
-          'LEADER_HOJO': "Hey Hojo-san, what's happening?\n",
+          'LEADER_HOJO': "Hey Toki-san, what's happening?\n",
           'LEADER_CHANDRAGUPTA': "Hey Chandy, what's happening?\n"
         },
         'message': "Um, I'm gonna need you to go ahead and do your turn.\n...Soooo if you could do that for me, that'd be great..mkay?"
@@ -25,33 +25,33 @@ module.exports.messages = {
       'quickest': {
         'intro': {
           'standard': "Hey!\n",
-          'LEADER_VICTORIA': "Hello Victoria, stop playing with your battleship!\n",
-          'LEADER_GENGHIS_KHAN': "Hello Genghis Khan, get off your horse and back into your ger!\n",
-          'LEADER_BARBAROSSA': "Hello Frederick Barbarossa, put down that beer!\n",
-          'LEADER_HOJO': "Hello Hojo Tokimune, stop fishing!\n",
-          'LEADER_CHANDRAGUPTA': "Hello Chandragupta, quit messing around with your Varu!\n"
+          'LEADER_VICTORIA': "Hey Victoria, stop playing around with your Sea Dogs!\n",
+          'LEADER_GENGHIS_KHAN': "Hey Genghis Khan, get back in the saddle!\n",
+          'LEADER_BARBAROSSA': "Hey Frederick Barbarossa, are you busy planning another crusade?\n",
+          'LEADER_HOJO': "Hey Hojo Tokimune, are you sharpening your katana and practicing Zen Buddhism?\n",
+          'LEADER_CHANDRAGUPTA': "Hey Chandragupta, stop messing around with your Varu!\n"
         },
         'message': "Keep your lead by doing your turn!"
       },
       'slowest': {
         'intro': {
           'standard': "Hey!\n",
-          'LEADER_VICTORIA': "Hello Victoria, stop playing with your battleship!\n",
-          'LEADER_GENGHIS_KHAN': "Hello Genghis Khan, get off your horse and back into your ger!\n",
-          'LEADER_BARBAROSSA': "Hello Frederick Barbarossa, put down that beer!\n",
-          'LEADER_HOJO': "Hello Hojo Tokimune, stop fishing!\n",
-          'LEADER_CHANDRAGUPTA': "Hello Chandragupta, quit messing around with your Varu!\n"
+          'LEADER_VICTORIA': "Hey Victoria! How on earth are you going to create the Empire at this rate?!\n",
+          'LEADER_GENGHIS_KHAN': "Hey Genghis Khan! Are you struggling there with your Mongol Horde?? I thought they were supposed to be fast!\n",
+          'LEADER_BARBAROSSA': "Hey Frederick Barbarossa! Those City-States aren't going to conquer themselves!\n",
+          'LEADER_HOJO': "Hey Hojo Tokimune! Your empire isn't like the Rising Sun! You're putting us to sleep!\n",
+          'LEADER_CHANDRAGUPTA': "Hey Chandragupta! Hurry up! Your empire isn't going to expand on its own!\n"
         },
         'message': "Pick up the pace to increase your rank!"
       },
       'general': {
         'intro': {
           'standard': "Hey!\n",
-          'LEADER_VICTORIA': "Hello Victoria, stop playing with your battleship!\n",
-          'LEADER_GENGHIS_KHAN': "Hello Genghis Khan, get off your horse and back into your ger!\n",
-          'LEADER_BARBAROSSA': "Hello Frederick Barbarossa, put down that beer!\n",
-          'LEADER_HOJO': "Hello Hojo Tokimune, stop fishing!\n",
-          'LEADER_CHANDRAGUPTA': "Hello Chandragupta, quit messing around with your Varu!\n"
+          'LEADER_VICTORIA': "Hey Victoria! Stop playing around with your Redcoats!\n",
+          'LEADER_GENGHIS_KHAN': "Hey Genghis Khan! Who are you shagging in the Ordu stables?? haha you dog!\n",
+          'LEADER_BARBAROSSA': "Hey Frederick Barbarossa! Are you busy dealing with a bunch of squabbling princes, dukes, and other feckless royalty?\n",
+          'LEADER_HOJO': "Hey Hojo Tokimune! You dishonour your family with such slow turns!\n",
+          'LEADER_CHANDRAGUPTA': "Hey Chandragupta! You bathing in a stepwell or something?\n"
         },
         'message': "Do your turn quickly before your rank drops!"
       }
@@ -60,33 +60,33 @@ module.exports.messages = {
       'quickest': {
         'intro': {
           'standard': "Heeey, are you okay chief? Just checking in.\n",
-          'LEADER_VICTORIA': "Heeey Vicky, are you okay chief? Just checking in.\n",
-          'LEADER_GENGHIS_KHAN': "Heeey Genghis, are you okay chief? Just checking in.\n",
-          'LEADER_BARBAROSSA': "Heeey Freddy, are you okay chief? Just checking in.\n",
-          'LEADER_HOJO': "Heeey Hojo-san, are you okay chief? Just checking in.\n",
-          'LEADER_CHANDRAGUPTA': "Heeey Chandy, are you okay chief? Just checking in.\n"
+          'LEADER_VICTORIA': "By the Grace of God, of the United Kingdom of Great Britain and Ireland Queen, Defender of the Faith, Empress of India...Are you okay?\n",
+          'LEADER_GENGHIS_KHAN': "Genghis Khan, Universal Leader of the Mongols...Are you okay?\n",
+          'LEADER_BARBAROSSA': "Duke of Swabia, King of Burgundy, King of Germany, King of the Romans. King of Italy, Holy Roman Emperor...Are you okay?\n",
+          'LEADER_HOJO': "Shikken of the Kamakura Shogunate, Imperial Japan, Tokuso of the clan Hojo, Tokimune...Are you okay?\n",
+          'LEADER_CHANDRAGUPTA': "Proud Mauryan King of all Jambudvipa, Chandragupta Maurya...Are you okay?\n"
         },
         'message': "So yeah...you wanna maybe logon and do your turn to keep your reputation intact?"
       },
       'slowest': {
         'intro': {
           'standard': "(_sigh_) Heeey...here we are again...what a surprise right. I just...you know what...nevermind.\n",
-          'LEADER_VICTORIA': "(_sigh_) Heeey Vicky...here we are again...what a surprise right. I just...you know what...nevermind.\n",
-          'LEADER_GENGHIS_KHAN': "(_sigh_) Heeey Genghis...here we are again...what a surprise right. I just...you know what...nevermind.\n",
-          'LEADER_BARBAROSSA': "(_sigh_) Heeey Freddy...here we are again...what a surprise right. I just...you know what...nevermind.\n",
-          'LEADER_HOJO': "(_sigh_) Heeey Hojo-san...here we are again...what a surprise right. I just...you know what...nevermind.\n",
-          'LEADER_CHANDRAGUPTA': "(_sigh_) Heeey Chandy...here we are again...what a surprise right. I just...you know what...nevermind.\n"
+          'LEADER_VICTORIA': "(_sigh_) Your Majesty The Queen Victoria! You reigned over Britain and its empire for 63 eventful years, but this day has been anything but eventful!\n",
+          'LEADER_GENGHIS_KHAN': "(_sigh_) Genghis Khan, Universal Leader of the Mongols! Your mare's milk ferments faster than your average turn time, you stupid barbarian!\n",
+          'LEADER_BARBAROSSA': "(_sigh_) Holy Roman Emperor, Frederick I! If you don't hurry up, the bards will start singing about your pubes again...Fanta Pants.\n",
+          'LEADER_HOJO': "(_sigh_) Tokuso of the clan Hojo, Tokimune! Get on with it! Meditating in your shrine isn't going to make your cock grow.\n",
+          'LEADER_CHANDRAGUPTA': "(_sigh_) King of Jambudvipa, Chandragupta Maurya! What the hell are you doing? Learning the precepts of Jainism or something??\n"
         },
         'message': "Do your turns faster man! COME ON!"
       },
       'general': {
         'intro': {
           'standard': "Heeey...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
-          'LEADER_VICTORIA': "Heeey Vicky...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
-          'LEADER_GENGHIS_KHAN': "Heeey Genghis...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
-          'LEADER_BARBAROSSA': "Heeey Freddy...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
-          'LEADER_HOJO': "Heeey Hojo-san...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n",
-          'LEADER_CHANDRAGUPTA': "Heeey Chandy...if you don't do your turn in the next hour, I'm calling the cops.\nhaha, no but seriously..\n"
+          'LEADER_VICTORIA': "Your Majesty The Queen Victoria! Ironic how they say 'The Sun Never Sets' on your Empire...But it sure feels like it has!\n",
+          'LEADER_GENGHIS_KHAN': "Genghis Khan, Universal Leader of the Mongols! Have you fallen off your horse again? Did you land in its shit?..\n",
+          'LEADER_BARBAROSSA': "Holy Roman Emperor, Frederick I! That is one looong meeting with your military advisors. Bet you're discussing invading independent City-States aye...\n",
+          'LEADER_HOJO': "Tokuso of the clan Hojo, Tokimune! If you continue to bring dishonour upon your clan, you should seriously consider harakiri!\n",
+          'LEADER_CHANDRAGUPTA': "Proud Mauryan King of all Jambudvipa, Chandragupta Maurya! You know...the Mauryan dynasty isn't going to establish itself!\n"
         },
         'message': "...Sooo how's about you get your shit together and do your turn aye?"
       }
@@ -95,33 +95,33 @@ module.exports.messages = {
       'quickest': {
         'intro': {
           'standard': "Oi...I can't believe I have to tell you this but\n",
-          'LEADER_VICTORIA': "Oi Victoria...I can't believe I have to tell you this but\n",
-          'LEADER_GENGHIS_KHAN': "Oi Genghis Khan...I can't believe I have to tell you this but\n",
-          'LEADER_BARBAROSSA': "Oi Frederick...I can't believe I have to tell you this but\n",
-          'LEADER_HOJO': "Oi Hojo Tokimune...I can't believe I have to tell you this but\n",
-          'LEADER_CHANDRAGUPTA': "Oi Chandragupta...I can't believe I have to tell you this but\n"
+          'LEADER_VICTORIA': "Oi! Your Royal Pain in the Arse Victoria!...Pax Britannica?? pfff...More like Lax Britannica!!\n",
+          'LEADER_GENGHIS_KHAN': "Oi! Lord of Horse Shit, Genghis Khan! The Mongol Horde needs its leader!\n",
+          'LEADER_BARBAROSSA': "Oi! Lord of 'blah blah', King of 'whatever', Emporer of 'who cares', Frederick Barbarossa! If you don't hurry up, you'll gather enemies like you gather titles!\n",
+          'LEADER_HOJO': "Oi! Shikken of Tempura, Unagi, and Teriyaki Salmon Bento! To follow Bushido is to train the mind, the body, and the soul. Could you do that in your own time though??\n",
+          'LEADER_CHANDRAGUPTA': "Oi! Your Fucking Kingship Chandragupta! There are neighbouring cities on your borders which are waiting to be conquered!\n"
         },
         'message': "BUT COME ON THIS IS TERRIBLE!!"
       },
       'slowest': {
         'intro': {
-          'standard': "Oi...Frankly, I'm not surprised I have to tell you this but\n",
-          'LEADER_VICTORIA': "Oi Victoria...Frankly, I'm not surprised I have to tell you this but\n",
-          'LEADER_GENGHIS_KHAN': "Oi Genghis Khan...Frankly, I'm not surprised I have to tell you this but\n",
-          'LEADER_BARBAROSSA': "Oi Frederick...Frankly, I'm not surprised I have to tell you this but\n",
-          'LEADER_HOJO': "Oi Hojo-san Tokimune...Frankly, I'm not surprised I have to tell you this but\n",
-          'LEADER_CHANDRAGUPTA': "Oi Chandragupta...Frankly, I'm not surprised I have to tell you this but\n"
+          'standard': "Oi!...FRANKLY I'M NOT SURPRISED I HAVE TO TELL YOU THIS BUT\n",
+          'LEADER_VICTORIA': "Oi! YOUR ROYAL PAIN IN THE ARSE VICTORIA!...YOU LIKE CONTINENTS?! MORE LIKE 'YOU'RE INCONTINENT!!' BECAUSE WE'RE ALL OLD NOW!\n",
+          'LEADER_GENGHIS_KHAN': "Oi! LORD OF HORSE SHIT, GENGHIS KHAN!...DID YOU GET DRUNK ON AIRAG AND LOSE YOUR HORSE AGAIN, YOU DUMB BRUTE!!\n",
+          'LEADER_BARBAROSSA': "Oi! LORD OF 'BLAH BLAH', KING OF 'WHATEVER', EMPORER OF 'WHO CARES', FREDERICK BARBAROSSA!...DOESN'T YOUR NAME MEAN 'GINGER BARBARIAN' OR SOMETHING? SOUNDS LIKE IT. HAHA SHAME.\n",
+          'LEADER_HOJO': "Oi! SHIKKEN OF TEMPURA, UNAGI, AND TERIYAKI SALMON BENTO!...YOU SULLY THE MEANING OF BUSHIDO AND HAVE BROUGHT GREAT DISHONOUR TO ALL JAPAN!!\n",
+          'LEADER_CHANDRAGUPTA': "Oi! YOUR FUCKING KINGSHIP, CHANDRA...WHATEVER YOUR NAME IS...COULD YOU JUST FIND ENLIGHTENMENT ALREADY AND ABDICATE YOUR THRONE TO YOUR SON, BINDUSARA??\n"
         },
         'message': "YOU ARE AN ABSOLUTE DISGRACE!!"
       },
       'general': {
         'intro': {
-          'standard': "Oi...Come on man...\n",
-          'LEADER_VICTORIA': "Oi Victoria...Come on man...\n",
-          'LEADER_GENGHIS_KHAN': "Oi Genghis Khan...Come on man...\n",
-          'LEADER_BARBAROSSA': "Oi Frederick...Come on man...\n",
-          'LEADER_HOJO': "Oi Hojo Tokimune...Come on man...\n",
-          'LEADER_CHANDRAGUPTA': "Oi Chandragupta...Come on man...\n"
+          'standard': "Oi...COME ON MAN...\n",
+          'LEADER_VICTORIA': "Oi! YOUR ROYAL PAIN IN THE ARSE VICTORIA!...AT THIS RATE, THE HOUSE OF WINDSOR WILL SOON BELONG IN ONE OF YOUR ARCHAEOLOGICAL MUSEUMS!\n",
+          'LEADER_GENGHIS_KHAN': "Oi! LORD OF HORSE SHIT, GENGHIS KHAN!...HOW DO EXPECT TO ESTABLISH YOUR TRADING POSTS AND TERRORISE THE STEPPE?? DID YOU CONFUSE YOUR HORSES WITH DONKEYS??\n",
+          'LEADER_BARBAROSSA': "Oi! LORD OF 'BLAH BLAH', KING OF 'WHATEVER', EMPORER OF 'WHO CARES', FREDERICK BARBAROSSA!...DID YOU DROWN ON YOUR WAY TO A FIGHT?! IF ONLY A U-BOAT COULD SAVE YOU HAHAHA\n",
+          'LEADER_HOJO': "Oi! SHIKKEN OF TEMPURA, UNAGI, AND TERIYAKI SALMON BENTO!...ARE YOU WAITING FOR THE DIVINE WIND TO SAVE YOU?! IT CERTAINLY SMELLS LIKE IT. YOU MIGHT WANT TO CHECK IT WASN'T A SHART HAHAHA\n",
+          'LEADER_CHANDRAGUPTA': "Oi! YOUR FUCKING KINGSHIP CHANDRAGUPTA!...YOU MUST BE TAKING A LONG BATH IN ONE OF YOUR STEPWELLS! YOUR NEIGHBOURS CAN SMELL THE STENCH OF SPICED BUTTERMILK EMANATING FROM YOUR EMPIRE!\n"
         },
         'message': "AT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?"
       }
