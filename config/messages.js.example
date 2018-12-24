@@ -9,19 +9,6 @@ module.exports.messages = {
     'no_nag': {
     },
     'minor_nag': {
-      'general': {
-        'intro': {
-          'standard': "Hello, what's happening?\n",
-          'LEADER_VICTORIA': "Hey Vicky, what's happening?\n",
-          'LEADER_GENGHIS_KHAN': "Hey Temujin, what's happening?\n",
-          'LEADER_BARBAROSSA': "Hey Freddy, what's happening?\n",
-          'LEADER_HOJO': "Hey Toki-san, what's happening?\n",
-          'LEADER_CHANDRAGUPTA': "Hey Chandy, what's happening?\n"
-        },
-        'message': "Um, I'm gonna need you to go ahead and do your turn.\n...Soooo if you could do that for me, that'd be great..mkay?"
-      }
-    },
-    'moderate_nag': {
       'quickest': {
         'intro': {
           'standard': "Hey!\n",
@@ -56,7 +43,7 @@ module.exports.messages = {
         'message': "Do your turn quickly before your rank drops!"
       }
     },
-    'major_nag': {
+    'moderate_nag': {
       'quickest': {
         'intro': {
           'standard': "Heeey, are you okay chief? Just checking in.\n",
@@ -91,7 +78,7 @@ module.exports.messages = {
         'message': "...Sooo how's about you get your shit together and do your turn aye?"
       }
     },
-    'gigantic_nag': {
+    'major_nag': {
       'quickest': {
         'intro': {
           'standard': "Oi...I can't believe I have to tell you this but\n",
@@ -124,6 +111,19 @@ module.exports.messages = {
           'LEADER_CHANDRAGUPTA': "Oi! YOUR FUCKING KINGSHIP CHANDRAGUPTA!...YOU MUST BE TAKING A LONG BATH IN ONE OF YOUR STEPWELLS! YOUR NEIGHBOURS CAN SMELL THE STENCH OF SPICED BUTTERMILK EMANATING FROM YOUR EMPIRE!\n"
         },
         'message': "AT THIS RATE YOU ARE GOING TO BE WORST!!\nIS THAT WHAT YOU WANT? DO YOU WANT TO BE THE WORST?"
+      }
+    },
+    'gigantic_nag': {
+      'general': {
+        'intro': {
+          'standard': "AAAAAAAAAAAAAAAAAAAAARRGH\n",
+          'LEADER_VICTORIA': "FFS VICTORIA!\n",
+          'LEADER_GENGHIS_KHAN': "FFS GENGHIS KHAN!\n",
+          'LEADER_BARBAROSSA': "FFS FREDERICK BARBAROSSA!\n",
+          'LEADER_HOJO': "FFS HOJO TOKIMUNE!\n",
+          'LEADER_CHANDRAGUPTA': "FFS CHANDRAGUPTA!\n"
+        },
+        'message': "HURRY THE F%#K UP YOU TURD!!!!!!"
       }
     }
 };
