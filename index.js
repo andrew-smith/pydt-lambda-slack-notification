@@ -360,7 +360,7 @@ function craftMessage(nagLevel, sinceTurn) {
         case 0:
           text = "It's your turn <@" + nextPlayerName + ">!\n";
           if(improveAverageTurnTime(averageTurnTimeArray, rank)){
-            text += "If you do your turn within " + doTurnWithin.minutes + " minutes, you average turn time will be better than " + targetPlayer + "!";
+            text += "If you do your turn within " + doTurnWithin.minutes + " minutes, your average turn time will be better than " + targetPlayer + "!";
           } else if(equalFastTurns(fastTurnsArray, fastTurns)){
             text += "If you do your turn within " + doTurnWithin.hours + " hour, you will have as many fast turns as " + targetPlayer + "!";
           } else if (betterFastTurns(fastTurnsArray, fastTurns)){
