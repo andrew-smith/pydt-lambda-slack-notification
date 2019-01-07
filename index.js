@@ -412,7 +412,7 @@ function craftMessage(nagLevel, sinceTurn) {
           if(QUICKEST){
             text = "<@" + nextPlayerName + ">\n";
             if (LEADER_MESSAGES){
-              text += MESSAGES.moderate_nag.quickest.intro[civType];
+              text += MESSAGES.moderate_nag.quickest.intro[civType] || MESSAGES.moderate_nag.quickest.intro.standard;
             } else {
               text += MESSAGES.moderate_nag.quickest.intro.standard;
             }
@@ -422,7 +422,7 @@ function craftMessage(nagLevel, sinceTurn) {
           } else if(SLOWEST){
             text = "<@" + nextPlayerName + ">\n";
             if (LEADER_MESSAGES){
-              text += MESSAGES.moderate_nag.slowest.intro[civType];
+              text += MESSAGES.moderate_nag.slowest.intro[civType] || MESSAGES.moderate_nag.slowest.intro.standard;
             } else {
               text += MESSAGES.moderate_nag.slowest.intro.standard;
             }
@@ -432,7 +432,7 @@ function craftMessage(nagLevel, sinceTurn) {
           } else {
             text = "<@" + nextPlayerName + ">\n";
             if (LEADER_MESSAGES){
-              text += MESSAGES.moderate_nag.general.intro[civType];
+              text += MESSAGES.moderate_nag.general.intro[civType] || MESSAGES.moderate_nag.general.intro.standard;
             } else {
               text += MESSAGES.moderate_nag.general.intro.standard;
             }
@@ -445,7 +445,7 @@ function craftMessage(nagLevel, sinceTurn) {
           if(QUICKEST){
             text = "<@" + nextPlayerName + ">\n";
             if (LEADER_MESSAGES){
-              text += MESSAGES.major_nag.quickest.intro[civType];
+              text += MESSAGES.major_nag.quickest.intro[civType] || MESSAGES.major_nag.quickest.intro.standard;
             } else {
               text += MESSAGES.major_nag.quickest.intro.standard;
             }
@@ -455,7 +455,7 @@ function craftMessage(nagLevel, sinceTurn) {
           } else if(SLOWEST){
             text = "<@" + nextPlayerName + ">\n";
             if (LEADER_MESSAGES){
-              text += MESSAGES.major_nag.slowest.intro[civType];
+              text += MESSAGES.major_nag.slowest.intro[civType] || MESSAGES.major_nag.slowest.intro.standard;
             } else {
               text += MESSAGES.major_nag.slowest.intro.standard;
             }
@@ -465,7 +465,7 @@ function craftMessage(nagLevel, sinceTurn) {
           } else {
             text = "<@" + nextPlayerName + ">\n";
             if (LEADER_MESSAGES){
-              text += MESSAGES.major_nag.general.intro[civType];
+              text += MESSAGES.major_nag.general.intro[civType] || MESSAGES.major_nag.general.intro.standard;
             } else {
               text += MESSAGES.major_nag.general.intro.standard;
             }
@@ -477,7 +477,7 @@ function craftMessage(nagLevel, sinceTurn) {
         case 4:
           text = "<@" + nextPlayerName + ">\n";
           if (LEADER_MESSAGES){
-            text += MESSAGES.gigantic_nag.general.intro[civType];
+            text += MESSAGES.gigantic_nag.general.intro[civType] || MESSAGES.gigantic_nag.general.intro.standard;
           } else {
             text += MESSAGES.gigantic_nag.general.intro.standard;
           }
